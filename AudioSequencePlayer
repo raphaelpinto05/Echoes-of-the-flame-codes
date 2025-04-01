@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AudioSequencePlayer : MonoBehaviour
+{
+    public AudioSource audioSource;
+    public List<AudioClip> audioClips; // Assign 7 audio clips in the Inspector
+    public float delayBetweenClips = 1f; // 1-second gap
+
+    private void Start()
+    {
+        StartCoroutine(PlayClipsInSequence());
+    }
+
+    private IEnumerator PlayClipsInSequence()
+    {
+        foreach (AudioClip clip in audioClips)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+            yield return new WaitForSeconds(clip.length + delayBetweenClips);
+        }
+    }
+}
