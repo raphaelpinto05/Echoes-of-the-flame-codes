@@ -1,0 +1,61 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PickupToInventory : MonoBehaviour
+{
+    public ItemPickup itemData;                     // The item's name and icon
+    public InputActionAsset inputActions;           // Reference to your XRInputActions asset
+
+    private InputAction inventoryAction;            // The "Inventory" action inside XRControls map
+    private bool isHeld = false;
+
+    void Start()
+    {
+        // ✅ SAFETY CHECK — Warn if this object isn't referencing its own ItemPickup
+        if (itemData == null || itemData.gameObject != gameObject)
+        {
+            Debug.LogWarning($"{name}: ItemData is not correctly assigned to itself! Fix this in the Inspector.");
+        }
+
+        // Get the "Inventory" action from XRControls map
+        inventoryAction = inputActions.FindActionMap("XRControls").FindAction("Inventory");
+
+        if (inventoryAction == null)
+        {
+            Debug.LogError("Inventory action not found! Make sure it's under XRControls in your Input Actions.");
+            return;
+        }
+
+        inventoryAction.Enable();
+    }
+
+    public void OnSelectEntered()
+    {
+        isHeld = true;
+        Debug.Log("Item grabbed.");
+    }
+
+    public void OnSelectExited()
+    {
+        isHeld = false;
+        Debug.Log("Item released.");
+    }
+
+    void Update()
+    {
+        // Always check if the button is pressed (even if not holding)
+        if (inventoryAction.WasPressedThisFrame())
+        {
+            Debug.Log("A button was pressed");
+        }
+
+        // Check if holding AND pressing the Inventory button
+        if (isHeld && inventoryAction.WasPressedThisFrame())
+        {
+            Debug.Log("Holding + A pressed → sending to inventory: " + itemData.itemName);
+
+            InventoryManager.instance.AddItem(itemData);
+            Destroy(gameObject); // Remove from world
+        }
+    }
+}
