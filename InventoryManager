@@ -1,0 +1,82 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InventoryManager : MonoBehaviour
+{
+    public static InventoryManager instance;
+
+    public List<ItemPickup> inventory = new List<ItemPickup>();         // List of collected items
+    public GameObject inventoryUI;                                      // Reference to inventory panel UI
+    public Transform inventorySlotParent;                               // Parent containing all slot objects
+
+    private List<Image> slotImages = new List<Image>();                 // UI slot image components
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        // Find and store image components from each slot
+        foreach (Transform slot in inventorySlotParent)
+        {
+            Image img = slot.GetComponent<Image>();
+            if (img != null)
+            {
+                img.enabled = false; // Start hidden
+                slotImages.Add(img);
+            }
+            else
+            {
+                Debug.LogWarning("Slot " + slot.name + " is missing an Image component!");
+            }
+        }
+    }
+
+    public void AddItem(ItemPickup item)
+    {
+        if (inventory.Count >= slotImages.Count)
+        {
+            Debug.Log("Inventory Full!");
+            return;
+        }
+
+        inventory.Add(item);
+        Debug.Log("Picked up: " + item.itemName);
+        UpdateInventoryUI();
+    }
+
+    void UpdateInventoryUI()
+    {
+        for (int i = 0; i < slotImages.Count; i++)
+        {
+            if (i < inventory.Count)
+            {
+                if (inventory[i] == null)
+                {
+                    Debug.LogWarning("Inventory item at index " + i + " is null.");
+                    continue;
+                }
+
+                if (inventory[i].itemIcon == null)
+                {
+                    Debug.LogWarning("Inventory item '" + inventory[i].itemName + "' has no icon assigned!");
+                    continue;
+                }
+
+                slotImages[i].sprite = inventory[i].itemIcon;
+                slotImages[i].enabled = true;
+            }
+            else
+            {
+                slotImages[i].sprite = null;
+                slotImages[i].enabled = false;
+            }
+        }
+    }
+}
