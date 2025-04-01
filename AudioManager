@@ -1,0 +1,74 @@
+using UnityEngine;
+
+public class AudioManager : MonoBehaviour
+{
+    public static AudioManager instance;
+    public AudioSource audioSource;
+
+    public AudioClip angeloParkRanger; // First audio
+    public AudioClip secondClip;       // Second audio
+    public AudioClip thirdClip;        // Third audio
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+
+        if (angeloParkRanger != null)
+        {
+            audioSource.PlayOneShot(angeloParkRanger);
+
+            // Schedule second clip: 5s (first clip) + 1s gap = 6s
+            Invoke(nameof(PlaySecondClip), 6f);
+
+            // Schedule third clip: 5s + 1s + secondClip.length + 1s gap
+            if (secondClip != null)
+            {
+                float thirdDelay = 6f + secondClip.length + 1f;
+                Invoke(nameof(PlayThirdClip), thirdDelay);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("First audio clip is missing!");
+        }
+    }
+
+    void PlaySecondClip()
+    {
+        if (secondClip != null)
+        {
+            audioSource.PlayOneShot(secondClip);
+        }
+        else
+        {
+            Debug.LogWarning("Second audio clip is missing!");
+        }
+    }
+
+    void PlayThirdClip()
+    {
+        if (thirdClip != null)
+        {
+            audioSource.PlayOneShot(thirdClip);
+        }
+        else
+        {
+            Debug.LogWarning("Third audio clip is missing!");
+        }
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+    }
+}
+
+
