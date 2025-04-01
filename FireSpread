@@ -1,0 +1,35 @@
+using UnityEngine;
+using System.Collections;
+
+public class FireSpread : MonoBehaviour
+{
+    public GameObject firePrefab;  // Assign the imported fire prefab here
+    public float spreadDelay = 3f; // Time before new fire appears
+    public float spreadRadius = 5f; // How far fire spreads
+    public int maxFires = 10; // Maximum fires
+
+    private int fireCount = 1;
+
+    void Start()
+    {
+        StartCoroutine(SpreadFire());
+    }
+
+    IEnumerator SpreadFire()
+    {
+        while (fireCount < maxFires)
+        {
+            yield return new WaitForSeconds(spreadDelay);
+
+            Vector3 newPos = transform.position + new Vector3(
+                Random.Range(-spreadRadius, spreadRadius),
+                0,
+                Random.Range(-spreadRadius, spreadRadius)
+            );
+
+            Instantiate(firePrefab, newPos, Quaternion.identity);
+            fireCount++;
+        }
+    }
+}
+
