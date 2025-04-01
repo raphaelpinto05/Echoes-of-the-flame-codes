@@ -1,0 +1,35 @@
+using UnityEngine;
+
+public class ProximityAudioTrigger : MonoBehaviour
+{
+    public AudioClip initialClip;
+    public AudioClip followUpClip;
+    public float delayBeforeFollowUp = 1f;
+    public float triggerDistance = 3f;
+
+    private bool hasPlayed = false;
+    private Transform player;
+
+    void Start()
+    {
+        player = Camera.main.transform; // Assumes player camera is MainCamera
+    }
+
+    void Update()
+    {
+        if (!hasPlayed && Vector3.Distance(transform.position, player.position) <= triggerDistance)
+        {
+            hasPlayed = true;
+            AudioManager.instance.PlaySound(initialClip);
+            Invoke(nameof(PlayFollowUp), delayBeforeFollowUp + initialClip.length);
+        }
+    }
+
+    void PlayFollowUp()
+    {
+        if (followUpClip != null)
+        {
+            AudioManager.instance.PlaySound(followUpClip);
+        }
+    }
+}
