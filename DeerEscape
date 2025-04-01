@@ -1,0 +1,24 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+public class DeerEscape : MonoBehaviour
+{
+    public Transform escapeTarget;
+
+    private NavMeshAgent agent;
+    private bool hasRun = false;
+
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
+
+    public void RunToSafety()
+    {
+        if (!hasRun && escapeTarget != null)
+        {
+            agent.SetDestination(escapeTarget.position);
+            hasRun = true;
+        }
+    }
+}
