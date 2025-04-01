@@ -1,0 +1,33 @@
+using UnityEngine;
+
+public class FireExtinguishSimple : MonoBehaviour
+{
+    public GameObject fireToExtinguish;
+    public DeerEscape deerScript;
+
+    private bool hasBeenGrabbed = false;
+    private bool actionTriggered = false;
+
+    void Update()
+    {
+        // Check if the object is being held (grabbed)
+        if (!hasBeenGrabbed && transform.parent != null)
+        {
+            hasBeenGrabbed = true;
+        }
+
+        // If it was held and now it's released (no parent), trigger the action
+        if (hasBeenGrabbed && transform.parent == null && !actionTriggered)
+        {
+            actionTriggered = true;
+
+            if (fireToExtinguish != null)
+                fireToExtinguish.SetActive(false);
+
+            if (deerScript != null)
+                deerScript.RunToSafety();
+
+            Debug.Log("Bottle released. Fire off. Deer running.");
+        }
+    }
+}
