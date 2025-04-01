@@ -1,0 +1,19 @@
+using UnityEngine;
+
+public class FireExtinguish : MonoBehaviour
+{
+    public GameObject fireVisuals; // Drag your fire particle system or fire model here
+    public DeerEscape deerScript;  // Drag your Deer GameObject here (must have DeerEscape.cs from Step 3)
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("WaterBottle"))
+        {
+            if (fireVisuals != null)
+                fireVisuals.SetActive(false); // hide the fire
+
+            if (deerScript != null)
+                deerScript.RunToSafety(); // trigger the deer
+        }
+    }
+}
