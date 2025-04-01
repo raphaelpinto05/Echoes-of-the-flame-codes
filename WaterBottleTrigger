@@ -1,0 +1,56 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+public class WaterBottleTrigger : MonoBehaviour
+{
+    private bool hasBeenGrabbed = false;
+    private bool alreadyTriggered = false;
+
+    void Update()
+    {
+        // Check if bottle was picked up
+        if (!hasBeenGrabbed && transform.parent != null)
+        {
+            hasBeenGrabbed = true;
+        }
+
+        // If it was grabbed and now released (no parent), trigger once
+        if (hasBeenGrabbed && transform.parent == null && !alreadyTriggered)
+        {
+            alreadyTriggered = true;
+
+            // --- HARD CODED FIRE ---
+            GameObject fire = GameObject.Find("Fire"); // Name of your fire GameObject
+            if (fire != null)
+            {
+                Destroy(fire);
+                Debug.Log("🔥 Fire destroyed");
+            }
+            else
+            {
+                Debug.LogWarning("No fire found with name 'Fire'");
+            }
+
+            // --- HARD CODED DEER ---
+            GameObject deer = GameObject.Find("Deer"); // Name of your deer GameObject
+            if (deer != null)
+            {
+                DeerEscape escape = deer.GetComponent<DeerEscape>();
+                if (escape != null)
+                {
+                    escape.RunToSafety();
+                    Debug.Log("🦌 Deer running to safety");
+                }
+                else
+                {
+                    Debug.LogWarning("DeerEscape script not found on Deer");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No GameObject found with name 'Deer'");
+            }
+        }
+    }
+}
+
