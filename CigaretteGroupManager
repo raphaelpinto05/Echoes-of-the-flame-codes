@@ -1,0 +1,26 @@
+using UnityEngine;
+
+public class CigaretteGroupHandler : MonoBehaviour
+{
+    public GameObject[] cigaretteObjects; // Drag all the cigarette objects here in Inspector
+
+    private bool hasGroupBeenPickedUp = false; // Prevent double-destroy
+
+    // This should be called from PickupToInventory script
+    public void OnCigarettePickedUp()
+    {
+        if (hasGroupBeenPickedUp) return;
+
+        hasGroupBeenPickedUp = true;
+
+        foreach (GameObject cig in cigaretteObjects)
+        {
+            if (cig != null)
+            {
+                Destroy(cig);
+            }
+        }
+
+        Debug.Log("All cigarettes in the group have been removed.");
+    }
+}
