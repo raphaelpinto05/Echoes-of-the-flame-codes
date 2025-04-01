@@ -1,0 +1,13 @@
+using UnityEngine;
+
+public class ForceEnableUI : MonoBehaviour
+{
+    void Start()
+    {
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.enabled = true;
+        }
+    }
+}
