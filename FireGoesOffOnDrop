@@ -1,0 +1,40 @@
+using UnityEngine;
+
+public class FireGoesOffOnDrop : MonoBehaviour
+{
+    private bool hasBeenGrabbed = false;
+    private bool actionTriggered = false;
+
+    void Update()
+    {
+        if (!hasBeenGrabbed && transform.parent != null)
+        {
+            hasBeenGrabbed = true;
+        }
+
+        if (hasBeenGrabbed && transform.parent == null && !actionTriggered)
+        {
+            actionTriggered = true;
+
+            // HARD-CODED: Find fire and destroy it
+            GameObject fire = GameObject.Find("Fire"); // replace with exact fire object name
+            if (fire != null)
+            {
+                Destroy(fire);
+            }
+
+            // HARD-CODED: Find deer and tell it to run
+            GameObject deer = GameObject.Find("Deer"); // replace with your deer object's name
+            if (deer != null)
+            {
+                DeerEscape escape = deer.GetComponent<DeerEscape>();
+                if (escape != null)
+                {
+                    escape.RunToSafety();
+                }
+            }
+
+            Debug.Log("Bottle dropped. Fire destroyed. Deer running.");
+        }
+    }
+}
